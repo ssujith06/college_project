@@ -1,127 +1,120 @@
 import json
 import random
-import streamlit as st
+import numpy as np
 from datetime import datetime
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import spacy
 
-class MentalHealthChatbot:
+nlp = spacy.load("en_core_web_sm")
+
+class AdvancedChatbot:
     def __init__(self):
+        self.vectorizer = TfidfVectorizer()
         self.intents = self.load_intents()
-        self.mood_responses = {
-            'stressed': [
-                "I see you're stressed. Remember, even diamonds are created under pressure!",
-                "Stress is just your brain's way of saying 'This is important!' Take a deep breath.",
-                "When stressed, think of yourself as a teabag - you don't know your strength until you're in hot water!"
+        self.setup_nlp()
+        self.personality = {
+            'tone': 'witty',
+            'response_style': 'empathetic',
+            'complexity': 0.8
+        }
+        
+    def load_intents(self):
+        with open('chatbot/intents.json') as f:
+            data = json.load(f)
+            # Vectorize all patterns during initialization
+            all_patterns = [p for intent in data['intents'] for p in intent['patterns']]
+            self.vectorizer.fit(all_patterns)
+            return data
+
+    def setup_nlp(self):
+        # Load additional resources
+        self.special_responses = {
+            'stress': [
+                "Stress is like a Wi-Fi signal - the closer you are to the source, the stronger it gets! Step back!",
+                "Your brain is like a browser with 50 tabs open. Time to close some tabs! 🖥️"
             ],
-            'tired': [
-                "Tired? That's just your body's way of saying 'I did great today!'",
-                "Even superheroes need naps. Take a break!",
-                "Being tired means you're productive. Or you stayed up watching cat videos. Both are valid."
-            ],
-            'overwhelmed': [
-                "Feeling overwhelmed? How do you eat an elephant? One bite at a time!",
-                "You're not alone in this. Even Gandalf needed the Fellowship!",
-                "Overwhelmed is just a temporary state. Like being hungry. Or needing to pee."
-            ],
-            'happy': [
-                "Yay! Happiness detected! Quick, do a little dance!",
-                "Someone's happy! Is it your birthday? Or did you find pizza in the fridge?",
-                "Happiness looks good on you! Keep shining!"
+            'fun_facts': [
+                "Did you know? The shortest war was between Britain and Zanzibar (38 minutes)!",
+                "Fun fact: Bananas are berries but strawberries aren't! Mind = blown 🤯"
             ]
         }
-        self.jokes = [
-            "Why don't scientists trust atoms? Because they make up everything!",
-            "Did you hear about the mathematician who's afraid of negative numbers? He'll stop at nothing to avoid them!",
-            "Why don't skeletons fight each other? They don't have the guts!",
-            "I'm reading a book about anti-gravity. It's impossible to put down!",
-            "Why did the scarecrow win an award? Because he was outstanding in his field!"
-        ]
-        self.encouragements = [
-            "You're doing amazing! Remember, even baby steps move you forward.",
-            "The fact that you're here means you care - that's already winning!",
-            "You're like a smartphone - way more capable than you think you are!",
-            "Remember: You survived 100% of your bad days so far. That's a perfect record!"
-        ]
 
-    def load_intents(self):
-        with open('chatbot/intents.json') as file:
-            return json.load(file)
-
-    def detect_mood(self, message):
-        message = message.lower()
-        mood_keywords = {
-            'stressed': ['stress', 'pressure', 'anxious', 'nervous'],
-            'tired': ['tired', 'exhausted', 'sleepy', 'fatigue'],
-            'overwhelmed': ['overwhelm', 'too much', 'can\'t handle', 'drowning'],
-            'happy': ['happy', 'great', 'awesome', 'amazing', 'good']
+    def process_input(self, text):
+        doc = nlp(text)
+        return {
+            'entities': [(ent.text, ent.label_) for ent in doc.ents],
+            'sentiment': self.analyze_sentiment(doc),
+            'keywords': [token.lemma_ for token in doc if not token.is_stop]
         }
-        
-        for mood, keywords in mood_keywords.items():
-            if any(keyword in message for keyword in keywords):
-                return mood
-        return None
 
-    def get_response(self, message):
-        message = message.lower()
-        mood = self.detect_mood(message)
+    def generate_response(self, user_input):
+        # NLP processing
+        analysis = self.process_input(user_input)
         
-        # Special responses for time-based greetings
-        current_hour = datetime.now().hour
-        if any(greeting in message for greeting in ['hi', 'hello', 'hey']):
-            if 5 <= current_hour < 12:
-                return random.choice([
-                    "Good morning sunshine! Ready to conquer the day? ☀️",
-                    "Top of the morning to you! May your coffee be strong and your lectures short!"
-                ])
-            elif 12 <= current_hour < 17:
-                return random.choice([
-                    "Good afternoon! How's your day treating you so far?",
-                    "Afternoon alert! Half the day is done - you're crushing it!"
-                ])
-            elif 17 <= current_hour < 22:
-                return random.choice([
-                    "Good evening! Time to relax and recharge! 🌙",
-                    "Evening greetings! Did you know otters hold hands while sleeping? You should find someone to hold hands with too!"
-                ])
-            else:
-                return random.choice([
-                    "Hello night owl! Burning the midnight oil?",
-                    "Up late? Remember, even Batman sleeps sometimes!"
-                ])
+        # Intent classification
+        intent = self.classify_intent(user_input)
         
-        # Mood-specific responses
-        if mood:
-            return random.choice(self.mood_responses[mood])
+        # Context-aware response generation
+        base_response = self.select_response(intent, analysis)
+        enhanced = self.enhance_response(base_response, analysis)
         
-        # Jokes
-        if any(trigger in message for trigger in ['joke', 'funny', 'laugh']):
-            return random.choice(self.jokes)
+        return self.format_response(enhanced)
+
+    def classify_intent(self, text):
+        vector = self.vectorizer.transform([text])
+        max_sim = -1
+        best_intent = None
         
-        # Encouragement
-        if any(trigger in message for trigger in ['sad', 'depressed', 'down', 'bad day']):
-            return random.choice(self.encouragements + [
-                "Bad days are just the universe's way of making the good ones feel extra good!",
-                "You know what's great about hitting rock bottom? There's only one way to go from here - up!",
-                "When life gives you lemons, squirt life in the eye and run away laughing!"
-            ])
-        
-        # Study motivation
-        if any(trigger in message for trigger in ['study', 'exam', 'test', 'assignment']):
-            return random.choice([
-                "Remember: You don't have to be perfect, just better than you were yesterday!",
-                "Studying is like eating an elephant - one bite at a time! (Please don't actually eat elephants)",
-                "The expert in anything was once a beginner. Keep going!"
-            ])
-        
-        # Default intent matching
         for intent in self.intents['intents']:
-            for pattern in intent['patterns']:
-                if pattern.lower() in message:
-                    return random.choice(intent['responses'])
+            intent_vectors = self.vectorizer.transform(intent['patterns'])
+            sim = max(cosine_similarity(vector, intent_vectors)[0])
+            if sim > max_sim:
+                max_sim = sim
+                best_intent = intent['tag']
         
-        # Fallback responses with humor
-        return random.choice([
-            "I'm not sure I understand, but here's a fun fact: Cows have best friends!",
-            "I'm still learning. Did you know the shortest war in history was between Britain and Zanzibar in 1896? It lasted 38 minutes!",
-            "I might be a bot, but I know one thing for sure - you're awesome!",
-            "I didn't get that, but here's a joke to cheer you up: " + random.choice(self.jokes)
-        ])
+        return best_intent if max_sim > 0.4 else None
+
+    def select_response(self, intent, analysis):
+        if not intent:
+            return random.choice([
+                "I'm still learning, but here's a fun fact for you!",
+                *self.special_responses['fun_facts']
+            ])
+            
+        intent_data = next(i for i in self.intents['intents'] if i['tag'] == intent)
+        
+        # Sentiment-based selection
+        if analysis['sentiment'] < -0.5:
+            return random.choice(intent_data.get('supportive_responses', intent_data['responses']))
+        return random.choice(intent_data['responses'])
+
+    def enhance_response(self, response, analysis):
+        enhancements = []
+        
+        # Add personality
+        if self.personality['tone'] == 'witty':
+            enhancements.append(" " + random.choice([
+                " BTW, you're awesome!",
+                " Fun fact: " + random.choice(self.special_responses['fun_facts']),
+                " 😄"
+            ]))
+        
+        # Add entity references
+        for entity, label in analysis['entities']:
+            if label == 'DATE':
+                enhancements.append(f" Mark your calendar for {entity}!")
+            elif label == 'PERSON':
+                enhancements.append(f" Say hi to {entity} for me!")
+        
+        return response + "".join(enhancements)
+
+    def format_response(self, text):
+        # Add typing delay calculation
+        words = text.split()
+        delay = min(0.1, max(0.03, 1.5/len(words)))
+        
+        return {
+            'text': text,
+            'typing_delay': delay
+        }
