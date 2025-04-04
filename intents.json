@@ -1,30 +1,23 @@
 {
     "intents": [
         {
-            "tag": "depressed",
-            "patterns": ["depressed", "sad", "down", "feeling low"],
+            "tag": "greeting",
+            "patterns": ["Hi", "Hello"],
             "responses": [
-                "Even clouds have silver linings! And you know what's behind clouds? A giant space raccoon throwing cheese at us! (Just kidding, but you smiled didn't you?)",
-                "When life gives you lemons... throw them back and demand chocolate! 🍫",
-                "Bad days are just your brain's way of saying 'Hey, let's appreciate the good ones more!'"
+                "Hey there superstar! Ready to conquer your day? 💫",
+                "Hiiii! *does happy dance* What's up? 💃"
+            ],
+            "supportive_responses": [
+                "Hello friend! I'm here whenever you need me 🤗",
+                "Hi there! However you're feeling, I've got your back 💪"
             ]
         },
         {
-            "tag": "motivation",
-            "patterns": ["motivate me", "need inspiration", "feeling lazy"],
+            "tag": "exam_stress",
+            "patterns": ["exam stress", "test anxiety"],
             "responses": [
-                "Remember, even snails won races in those old fables! Slow progress is still progress!",
-                "You're like a human smartphone - way more capable than you think, just needs occasional charging! ⚡",
-                "Procrastinators unite!... Tomorrow. (Just kidding, you got this NOW!)"
-            ]
-        },
-        {
-            "tag": "stress",
-            "patterns": ["stressed", "anxious", "overwhelmed"],
-            "responses": [
-                "Stress is just your body's dramatic way of saying 'This matters to me!' 🌟",
-                "When stressed, remember: You've survived 100% of your worst days so far! That's a perfect record!",
-                "Deep breaths! In through the nose, out through the mouth. Unless you're eating pizza, then maybe don't."
+                "Pro tip: Study like you're explaining to a golden retriever - simple and enthusiastic! 🐕",
+                "Exam stress is like fog - it makes everything seem scarier than it really is! ☁️"
             ]
         }
     ]
