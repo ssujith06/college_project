@@ -1,117 +1,30 @@
 {
     "intents": [
         {
-            "tag": "greeting",
-            "patterns": [
-                "Hi",
-                "Hello",
-                "Hey",
-                "Good morning",
-                "Good afternoon",
-                "Good evening",
-                "What's up"
-            ],
+            "tag": "depressed",
+            "patterns": ["depressed", "sad", "down", "feeling low"],
             "responses": [
-                "Hello there! Ready to tackle the day with a smile?",
-                "Hi sunshine! How's your day going?",
-                "Hey you! Did you know smiling burns calories? Fake it till you make it!",
-                "Greetings earthling! How can I brighten your day?"
-            ]
-        },
-        {
-            "tag": "studies",
-            "patterns": [
-                "studying",
-                "exam",
-                "test",
-                "assignment",
-                "homework",
-                "project"
-            ],
-            "responses": [
-                "Remember: You're not procrastinating, you're just doing priority management!",
-                "The key to success? Pretend you're in a movie montage - eye of the tiger!",
-                "Studying tip: For every hour of studying, reward yourself with 10 minutes of cat videos!",
-                "You know more than you think! Trust your brain - it's got this!"
-            ]
-        },
-        {
-            "tag": "stress",
-            "patterns": [
-                "stressed",
-                "anxious",
-                "nervous",
-                "pressure",
-                "freaking out"
-            ],
-            "responses": [
-                "Stress is just your body's way of saying 'This matters to me!'",
-                "When stressed, remember: You've survived 100% of your worst days so far!",
-                "Deep breaths! In through the nose, out through the mouth. Unless you're eating, then maybe don't.",
-                "Stress is like a rocking chair - gives you something to do but doesn't get you anywhere. Time to stand up!"
-            ]
-        },
-        {
-            "tag": "tired",
-            "patterns": [
-                "tired",
-                "exhausted",
-                "sleepy",
-                "fatigue",
-                "need rest"
-            ],
-            "responses": [
-                "Even phones need to recharge - you're no different! Take a break!",
-                "Tired? That's just your body saying 'I did great today!'",
-                "Nap time is brain time! Einstein napped, and he turned out okay!",
-                "Pro tip: A 20-minute power nap is like pressing your brain's reset button!"
-            ]
-        },
-        {
-            "tag": "joke",
-            "patterns": [
-                "tell me a joke",
-                "make me laugh",
-                "funny",
-                "cheer me up"
-            ],
-            "responses": [
-                "Why don't eggs tell jokes? They'd crack each other up!",
-                "What do you call a fake noodle? An impasta!",
-                "How does a penguin build its house? Igloos it together!",
-                "Why did the math book look sad? Because it had too many problems!"
+                "Even clouds have silver linings! And you know what's behind clouds? A giant space raccoon throwing cheese at us! (Just kidding, but you smiled didn't you?)",
+                "When life gives you lemons... throw them back and demand chocolate! 🍫",
+                "Bad days are just your brain's way of saying 'Hey, let's appreciate the good ones more!'"
             ]
         },
         {
             "tag": "motivation",
-            "patterns": [
-                "motivate me",
-                "need inspiration",
-                "feeling down",
-                "cheer me up",
-                "encouragement"
-            ],
+            "patterns": ["motivate me", "need inspiration", "feeling lazy"],
             "responses": [
-                "You're like WiFi - invisible but essential! The world needs you!",
-                "Remember: You're the leading actor in your life movie. Time for an Oscar-worthy performance!",
-                "You're not behind - you're exactly where you need to be. Keep going!",
-                "Bad day? That's okay! Even pizza falls cheese-side down sometimes!"
+                "Remember, even snails won races in those old fables! Slow progress is still progress!",
+                "You're like a human smartphone - way more capable than you think, just needs occasional charging! ⚡",
+                "Procrastinators unite!... Tomorrow. (Just kidding, you got this NOW!)"
             ]
         },
         {
-            "tag": "goodbye",
-            "patterns": [
-                "bye",
-                "goodbye",
-                "see you",
-                "later",
-                "take care"
-            ],
+            "tag": "stress",
+            "patterns": ["stressed", "anxious", "overwhelmed"],
             "responses": [
-                "Bye! Remember: You're more awesome than a unicorn riding a skateboard!",
-                "See you later, alligator! After while, crocodile!",
-                "Goodbye! Go forth and be ridiculously amazing!",
-                "Take care! And remember: You're someone's reason to smile today!"
+                "Stress is just your body's dramatic way of saying 'This matters to me!' 🌟",
+                "When stressed, remember: You've survived 100% of your worst days so far! That's a perfect record!",
+                "Deep breaths! In through the nose, out through the mouth. Unless you're eating pizza, then maybe don't."
             ]
         }
     ]
